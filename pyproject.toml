@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "verificado-profesional"
+version = "0.1.0"
+description = "backend"
+authors = ["verificado"]
+readme = "README.md"
+packages = [{include = "app"},
+{include = "app/**/*.py"},]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.63.0"
+uvicorn = "^0.13.4"
+pydantic = {extras = ["email"], version = "^1.8.1"}
+pytest = "^6.2.5"
+requests = "^2.26.0"
+
+
+[tool.poetry.scripts]
+start = "app.main:start"
