@@ -5,6 +5,6 @@ from app.controllers.dashboard import DashboardController
 router = APIRouter()
 
 
-@router.get("/", tags=["dashboard"])
+@router.get("/dashboard/", tags=["dashboard"])
 async def get_dashboard():
     return DashboardController.get()

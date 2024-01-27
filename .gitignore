@@ -1,1 +1,5 @@
 __pycache__
+fastapi-env
+.vscode/
+app/__pycache__
+app/**/__pycache__
