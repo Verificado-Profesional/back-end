@@ -1,12 +1,17 @@
 from fastapi import FastAPI
 import uvicorn
 from .routers import dashboard, veracity, sentiment
-import os
+from decouple import config
+
 
 app = FastAPI()
 app.include_router(dashboard.router)
 app.include_router(veracity.router)
 app.include_router(sentiment.router)
+
+
+# Load environment variables from .env file
+# env_vars = dotenv_values(".env")
 
 
 def start():
@@ -16,7 +21,9 @@ def start():
 
 
 def getConfig():
-    return os.getenv("HOST"), os.getenv("PORT")
+    host = config("HOST")
+    port = config("PORT")
+    return host, int(port)
 
 
 @app.get("/")
