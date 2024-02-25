@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import uvicorn
 from .routers import dashboard, veracity, sentiment
-from decouple import config
+import os
 
 
 app = FastAPI()
@@ -21,8 +21,8 @@ def start():
 
 
 def getConfig():
-    host = config("HOST")
-    port = config("PORT")
+    host = os.getenv("HOST")
+    port = os.getenv("PORT")
     return host, int(port)
 
 
