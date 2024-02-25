@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
+from app.controllers.veracity import VeracityController
 
 
 router = APIRouter()
@@ -7,15 +7,4 @@ router = APIRouter()
 
 @router.post("/veracity/", tags=["veracity"])
 async def post_veracity():
-    return JSONResponse(
-        content={
-            "status": "success",
-            "message": "La noticia ha sido clasificada exitosamente.",
-            "data": {
-                "title": "Titulo de la noticia",
-                "content": "Contenido de la noticia",
-                "classification": True,
-                "accuracy": 68,
-            },
-        }
-    )
+    return VeracityController.post()
