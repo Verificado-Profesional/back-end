@@ -23,6 +23,7 @@ def start():
 def getConfig():
     host = config("HOST")
     port = config("PORT")
+    print(host, port)
     return host, int(port)
 
 
