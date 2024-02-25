@@ -3,3 +3,4 @@ fastapi-env
 .vscode/
 app/__pycache__
 app/**/__pycache__
+.poetry.lock
