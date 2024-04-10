@@ -15,7 +15,6 @@ class NewsRepository(DataBase):
             self.client = MongoClient(url)
             self.db = self.client.mongodb_client[db_name]
             self.collection = self.db[COLLECTION_NAME]
-            print(self.db, self.client)
 
     def get(self, id=None):
         if id is None:
@@ -27,6 +26,4 @@ class NewsRepository(DataBase):
 
     def delete(self, id: str):
         delete_result = self.collection.delete_one({"_id": id})
-        print(delete_result.deleted_count == 1)
-        print(delete_result.deleted_count)
         return delete_result.deleted_count == 1
