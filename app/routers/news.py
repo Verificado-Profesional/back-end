@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, status, Request, Response
+from fastapi import APIRouter, HTTPException, status, Request, Response
 
 from app.controllers.news_controller import NewsController
 from app.models.news import News
@@ -51,7 +51,7 @@ async def delete_news(request: Request, id: str, response: Response):
 @router.post(
     "/news/fetch-data", tags=["news"], response_description="Post an article by url"
 )
-async def fetch_data(request: Request):
+async def fetch_data(request: Request, response: Response):
     try:
         # Extraer el contenido del artículo
         body_bytes = await request.body()
@@ -71,11 +71,18 @@ async def fetch_data(request: Request):
             # Devolver el contenido del artículo
             return text_content
         else:
-            return None
+            response.status_code = status.HTTP_404_NOT_FOUND
+            return HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Error obtaining article content",
+            )
 
     except Exception as e:
         print("Error al obtener el contenido del artículo:", e)
-        return None
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Item not found"
+        )
 
 
 async def fetch_article_content(url):
