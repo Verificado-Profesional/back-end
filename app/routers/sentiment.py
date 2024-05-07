@@ -1,17 +1,11 @@
 from fastapi import APIRouter
+from app.controllers.models import ModelController
+from app.models.text import Text
 
 router = APIRouter()
 
+SENTIMENT_MODEL = "VerificadoProfesional/SaBERT-Spanish-Sentiment-Analysis"
 
 @router.post("/sentiment/", tags=["sentiment"])
-async def post_sentiment():
-    return {
-        "status": "success",
-        "message": "La noticia ha sido clasificada exitosamente.",
-        "data": {
-            "title": "Titulo de la noticia",
-            "content": "Contenido de la noticia",
-            "classification": "Positive",
-            "accuracy": 68,
-        },
-    }
+async def post_sentiment(text: Text):
+    return ModelController.post(text,SENTIMENT_MODEL)
