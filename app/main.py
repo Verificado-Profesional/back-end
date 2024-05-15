@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import uvicorn
-from .routers import dashboard, veracity, sentiment, news
+from .routers import dashboard, veracity, sentiment, news, tendencies
 from app.config.config import get_settings
 from app.repositories.news_repository import NewsRepository
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,6 +11,7 @@ app.include_router(dashboard.router)
 app.include_router(veracity.router)
 app.include_router(sentiment.router)
 app.include_router(news.router)
+app.include_router(tendencies.router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -28,6 +29,7 @@ def shutdown_db_client():
 def start():
     settings = get_settings()
     news_repository = NewsRepository(settings.db_name, settings.client)
+    #tendencies_repository = TendenciesRepository(settings.db_name, settings.client)
     print("connected database!")
     """Launched with `poetry run start` at root level"""
     uvicorn.run("app.main:app", host=settings.host, port=settings.port, reload=True)
