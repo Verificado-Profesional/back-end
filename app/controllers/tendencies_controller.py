@@ -11,7 +11,7 @@ class TendenciesController:
 
     @staticmethod
     def get(request: Request, date: str, source: str):
-        if (tendencies := tendencies_repository.get_from(date, source)):
+        if (tendencies := tendencies_repository.get_from(date, source)) is not None:
             return tendencies
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=f"Date {date} or source {source} not valid"

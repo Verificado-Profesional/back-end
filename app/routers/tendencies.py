@@ -5,7 +5,7 @@ from app.models.tendencies import Tendencies
 
 router = APIRouter()
 
-@router.get(
+@router.get( #TODO raise exception here
     "/tendencies/",
     tags=["tendencies"],
     response_description="Get tendencies from specific date and source",
