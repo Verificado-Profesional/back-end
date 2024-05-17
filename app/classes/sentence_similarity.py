@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 import pickle
 from sentence_transformers import SentenceTransformer, util
-from app.config.config import get_settings
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
