@@ -1,12 +1,14 @@
 import torch
+import warnings
 import numpy as np
 import pandas as pd
 import pickle
 from sentence_transformers import SentenceTransformer, util
-import warnings
+from app.config.config import get_settings
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 MODEL_NAME = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
-warnings.simplefilter(action='ignore', category=FutureWarning)
 
 class SentenceSimilarity:
 
@@ -19,10 +21,9 @@ class SentenceSimilarity:
     def save_pickle():
         df =  pd.read_csv("./app/data/news_embeddings.csv")
         df['embeddings'] = df['embeddings'].apply(lambda x: np.array(eval(x)))
-        with open('news.pkl', 'wb') as file:
+        with open('./app/data/news.pkl', 'wb') as file:
             pickle.dump(df, file)
         
-
     def get_news(self):
         with open("./app/data/news.pkl", 'rb') as file:
             df = pickle.load(file) 
