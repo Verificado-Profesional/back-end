@@ -8,7 +8,7 @@ packages = [{include = "app"},
 {include = "app/**/*.py"},]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 fastapi = "^0.63.0"
 uvicorn = "^0.13.4"
 pydantic = {extras = ["email"], version = "^1.8.1"}
@@ -24,6 +24,10 @@ newspaper3k = "^0.2.8"
 lxml-html-clean = "^0.1.1"
 torch = "^2.3.0"
 transformers = "^4.40.2"
+pandas = "^2.2.2"
+pytrends = "^4.9.2"
+numpy = "^1.26.4"
+sentence-transformers = "^2.7.0"
 
 [tool.poetry.scripts]
 start = "app.main:start"
