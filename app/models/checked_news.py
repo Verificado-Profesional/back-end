@@ -8,6 +8,7 @@ class CheckedNews(BaseModel):
     category: str = Field(...)
     source: str = Field(...)
     date: str = Field(...)
+    embeddings: list = Field(...)
 
     @staticmethod
     def get_schema():
