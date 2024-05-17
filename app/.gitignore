@@ -1,3 +1,4 @@
 .env
 fastapi-env/
 __pycache__/
+data/news_embeddings.csv
