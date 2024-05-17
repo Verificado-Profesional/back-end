@@ -1,5 +1,7 @@
 import torch
 from transformers import BertForSequenceClassification, BertTokenizer
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 class BertClassifier:
 

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import uvicorn
-from .routers import dashboard, veracity, sentiment, news, tendencies
+from .routers import dashboard, veracity, sentiment, news, tendencies,similarity
 from app.config.config import get_settings
 from app.repositories.news_repository import NewsRepository
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,6 +10,7 @@ app = FastAPI()
 app.include_router(dashboard.router)
 app.include_router(veracity.router)
 app.include_router(sentiment.router)
+app.include_router(similarity.router)
 app.include_router(news.router)
 app.include_router(tendencies.router)
 app.add_middleware(
