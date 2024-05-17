@@ -1,23 +1,19 @@
-import uuid
 from typing import Optional
-from pydantic import BaseModel, Field
+from bson import ObjectId
+from pydantic import BaseModel, Field, json
+
+
+json.ENCODERS_BY_TYPE[ObjectId] = str
 
 
 class News(BaseModel):
-    id: str = Field(default_factory=uuid.uuid4, alias="_id")
-    title: str = Field(...)
+    id_news: str = Field(default_factory=lambda: str(ObjectId()), alias="_id")
     content: str = Field(...)
     classification: str = Field(...)
-
-    def to_json(self):
-        return loads(self.json(exclude_defaults=True))
-
-    @staticmethod
-    def get_schema():
-        return {"id": str, "title": str, "content": str, "classification": str}
+    view_count: int = Field(default=1)
 
 
 class NewsUpdate(BaseModel):
-    title: Optional[str]
     content: Optional[str]
     classification: Optional[str]
+    view_count: Optional[int]

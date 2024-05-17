@@ -1,5 +1,6 @@
 from typing import List
 
+from bson import ObjectId
 from fastapi import APIRouter, HTTPException, status, Request, Response
 
 from app.controllers.news_controller import NewsController
@@ -8,6 +9,11 @@ from app.models.news import News
 from bs4 import BeautifulSoup
 from newspaper import Article
 import json
+from pydantic import json
+
+
+json.ENCODERS_BY_TYPE[ObjectId] = str
+
 
 router = APIRouter()
 
@@ -19,23 +25,25 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     response_model=News,
 )
-async def post_news(request: Request, news: News):
-    return NewsController.post(request, news)
+async def post_news(news: News, response: Response):
+    news = NewsController.post(news)
+    response.status_code = status.HTTP_201_CREATED
+    return news
 
 
-@router.get("/news/", tags=["news"], response_description="List all news")
+@router.get(
+    "/news/",
+    tags=["news"],
+    response_description="List all news",
+    response_model=List[News],
+)
 async def list_news():
     return NewsController.list_news()
 
 
-@router.get(
-    "/news/{id}",
-    tags=["news"],
-    response_description="Get a single news by id",
-    response_model=News,
-)
-async def read_news(request: Request, id: str):
-    return NewsController.get(request, id)
+@router.get("/news/{id}", tags=["news"], response_description="Get a single news by id")
+async def read_news(id: str):
+    return NewsController.get(id)
 
 
 @router.delete(
@@ -52,31 +60,32 @@ async def delete_news(request: Request, id: str, response: Response):
     "/news/fetch-data", tags=["news"], response_description="Post an article by url"
 )
 async def fetch_data(request: Request, response: Response):
+    body = obtain_body(request)
+    url = body.get("url")
+
+    article_content = await fetch_article_content(url)
+
+    if article_content:
+        # Analizar el contenido HTML para obtener solo el texto
+        soup = BeautifulSoup(article_content, "html.parser")
+        text_content = soup.get_text()
+
+        # Devolver el contenido del artículo
+        return text_content
+    else:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Error obtaining article content",
+        )
+
+
+async def obtain_body(request: Request):
     try:
         # Extraer el contenido del artículo
         body_bytes = await request.body()
-        print(body_bytes)
         # Parse the JSON data
-        body = json.loads(body_bytes)
-        url = body.get("url")
-        print(body)
-        print(url)
-        article_content = await fetch_article_content(url)
-
-        if article_content:
-            # Analizar el contenido HTML para obtener solo el texto
-            soup = BeautifulSoup(article_content, "html.parser")
-            text_content = soup.get_text()
-
-            # Devolver el contenido del artículo
-            return text_content
-        else:
-            response.status_code = status.HTTP_404_NOT_FOUND
-            return HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Error obtaining article content",
-            )
-
+        return json.loads(body_bytes)
     except Exception as e:
         print("Error al obtener el contenido del artículo:", e)
         response.status_code = status.HTTP_404_NOT_FOUND
