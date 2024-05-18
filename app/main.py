@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config.config import get_settings
 from app.repositories.news_repository import NewsRepository
+from app.repositories.tendencies_repository import TendenciesRepository
 
 from .routers import news, sentiment, similarity, tendencies, veracity
 
@@ -31,7 +32,7 @@ def shutdown_db_client():
 def start():
     settings = get_settings()
     NewsRepository(settings.db_name, settings.client)
-    # tendencies_repository = TendenciesRepository(settings.db_name, settings.client)
+    TendenciesRepository(settings.db_name, settings.client)
     print("connected database!")
     """Launched with `poetry run start` at root level"""
     uvicorn.run("app.main:app", host=settings.host, port=settings.port, reload=True)
