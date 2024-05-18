@@ -17,3 +17,12 @@ repos:
       entry: autopep8
       language: python
       types: [python]
+-   repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+    -   id: isort
+-   repo: https://github.com/PyCQA/autoflake
+    rev: v2.2.1
+    hooks:
+    -   id: autoflake
+        args: ["--remove-all-unused-imports", "--remove-unused-variables", "--expand-star-imports", "--ignore-init-module-imports", "--in-place", "."]

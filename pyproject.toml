@@ -31,3 +31,8 @@ sentence-transformers = "^2.7.0"
 
 [tool.poetry.scripts]
 start = "app.main:start"
+
+[tool.poetry.group.dev.dependencies]
+autoflake = "^2.3.1"
+isort = "^5.13.2"
+pre-commit = "^3.7.1"

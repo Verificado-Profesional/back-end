@@ -1,16 +1,13 @@
+import json
 from typing import List
 from urllib import response
 
-from bson import ObjectId
-from fastapi import APIRouter, HTTPException, status, Request, Response
+from bs4 import BeautifulSoup
+from fastapi import APIRouter, HTTPException, Request, Response, status
+from newspaper import Article
 
 from app.controllers.news_controller import NewsController
 from app.models.news import News
-
-from bs4 import BeautifulSoup
-from newspaper import Article
-import json
-
 
 router = APIRouter()
 
@@ -58,7 +55,7 @@ async def delete_news(request: Request, id: str, response: Response):
 )
 async def fetch_data(request: Request, response: Response):
     body = await obtain_body(request)
-    url = body.get('url')
+    url = body.get("url")
 
     article_content = await fetch_article_content(url)
 
@@ -81,7 +78,7 @@ async def obtain_body(request: Request):
     try:
         # Extraer el contenido del artículo
         body_bytes = await request.body()
-        body_bytes_decoded = body_bytes.decode('utf-8')
+        body_bytes_decoded = body_bytes.decode("utf-8")
         # Parse the JSON data
         return json.loads(body_bytes_decoded)
     except Exception as e:
