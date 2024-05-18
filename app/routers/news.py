@@ -10,10 +10,6 @@ from app.models.news import News
 from bs4 import BeautifulSoup
 from newspaper import Article
 import json
-from pydantic import json
-
-
-json.ENCODERS_BY_TYPE[ObjectId] = str
 
 
 router = APIRouter()
@@ -61,8 +57,8 @@ async def delete_news(request: Request, id: str, response: Response):
     "/news/fetch-data", tags=["news"], response_description="Post an article by url"
 )
 async def fetch_data(request: Request, response: Response):
-    body = obtain_body(request)
-    url = body.get("url")
+    body = await obtain_body(request)
+    url = body.get('url')
 
     article_content = await fetch_article_content(url)
 
@@ -85,8 +81,9 @@ async def obtain_body(request: Request):
     try:
         # Extraer el contenido del artículo
         body_bytes = await request.body()
+        body_bytes_decoded = body_bytes.decode('utf-8')
         # Parse the JSON data
-        return json.loads(body_bytes)
+        return json.loads(body_bytes_decoded)
     except Exception as e:
         print("Error al obtener el contenido del artículo:", e)
         response.status_code = status.HTTP_404_NOT_FOUND
