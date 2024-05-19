@@ -17,6 +17,8 @@ class SentenceSimilarity:
         self.news = self.get_news()
         embeddings_array = np.stack(self.news["embeddings"].values)
         self.embeddings = torch.tensor(embeddings_array, dtype=torch.float32)
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.embeddings = self.embeddings.to(self.device)
 
     def save_pickle():
         df = pd.read_csv("./app/data/news_embeddings.csv")
@@ -32,6 +34,7 @@ class SentenceSimilarity:
     def find_similarity(self, query, top_k=5):
         query_embedding = self.model.encode(query, convert_to_tensor=True)
         query_embedding = query_embedding.to(torch.float32)
+        query_embedding = query_embedding.to(self.device)
 
         cos_scores = util.pytorch_cos_sim(query_embedding, self.embeddings)[0]
         top_results = cos_scores.topk(top_k)
