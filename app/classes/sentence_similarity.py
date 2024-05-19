@@ -1,34 +1,35 @@
-import torch
+import pickle
 import warnings
+
 import numpy as np
 import pandas as pd
-import pickle
+import torch
 from sentence_transformers import SentenceTransformer, util
 
-warnings.simplefilter(action='ignore', category=FutureWarning)
+from app.config.constants import MODEL_NAME
 
-MODEL_NAME = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+warnings.simplefilter(action="ignore", category=FutureWarning)
+
 
 class SentenceSimilarity:
-
     def __init__(self):
         self.model = SentenceTransformer(MODEL_NAME)
-        self.news =  self.get_news()
-        embeddings_array = np.stack(self.news['embeddings'].values)
+        self.news = self.get_news()
+        embeddings_array = np.stack(self.news["embeddings"].values)
         self.embeddings = torch.tensor(embeddings_array, dtype=torch.float32)
-        
+
     def save_pickle():
-        df =  pd.read_csv("./app/data/news_embeddings.csv")
-        df['embeddings'] = df['embeddings'].apply(lambda x: np.array(eval(x)))
-        with open('./app/data/news.pkl', 'wb') as file:
+        df = pd.read_csv("./app/data/news_embeddings.csv")
+        df["embeddings"] = df["embeddings"].apply(lambda x: np.array(eval(x)))
+        with open("./app/data/news.pkl", "wb") as file:
             pickle.dump(df, file)
-        
+
     def get_news(self):
-        with open("./app/data/news.pkl", 'rb') as file:
-            df = pickle.load(file) 
+        with open("./app/data/news.pkl", "rb") as file:
+            df = pickle.load(file)
         return df
-       
-    def find_similarity(self,query, top_k=5):
+
+    def find_similarity(self, query, top_k=5):
         query_embedding = self.model.encode(query, convert_to_tensor=True)
         query_embedding = query_embedding.to(torch.float32)
 
@@ -39,13 +40,13 @@ class SentenceSimilarity:
         for score, idx in zip(top_results[0], top_results[1]):
             row = self.news.iloc[idx.item()]
             response = {
-                "title" : row["title"],
+                "title": row["title"],
                 "url": row["url"],
                 "source": row["source"],
                 "category": row["category"],
                 "date": row["date"],
                 "score": float(f"{score:.4f}"),
-            } 
+            }
             similar_rows.append(response)
 
         return similar_rows

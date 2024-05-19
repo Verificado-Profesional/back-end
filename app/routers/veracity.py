@@ -1,11 +1,10 @@
 from fastapi import APIRouter
 
+from app.config.constants import VERACITY_MODEL
 from app.controllers.models_controller import ModelController
 from app.models.text import Text
 
 router = APIRouter()
-
-VERACITY_MODEL = "VerificadoProfesional/SaBERT-Spanish-Fake-News"
 
 
 @router.post("/veracity/", tags=["veracity"])

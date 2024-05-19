@@ -1,11 +1,10 @@
 from fastapi import APIRouter
 
+from app.config.constants import SENTIMENT_MODEL
 from app.controllers.models_controller import ModelController
 from app.models.text import Text
 
 router = APIRouter()
-
-SENTIMENT_MODEL = "VerificadoProfesional/SaBERT-Spanish-Sentiment-Analysis"
 
 
 @router.post("/sentiment/", tags=["sentiment"])

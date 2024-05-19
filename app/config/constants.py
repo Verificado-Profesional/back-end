@@ -1,0 +1,6 @@
+MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+SENTIMENT_MODEL = "VerificadoProfesional/SaBERT-Spanish-Sentiment-Analysis"
+VERACITY_MODEL = "VerificadoProfesional/SaBERT-Spanish-Fake-News"
+DATE_FORMAT = "%d-%m-%y"
+TWITTER = "twitter"
+GOOGLE = "google"
