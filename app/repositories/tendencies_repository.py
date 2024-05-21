@@ -31,15 +31,12 @@ class TendenciesRepository(DataBase):
             self.google_collection = self.db[constants.GOOGLE]
 
     def get_from(self, date, source, region = 'argentina'):
-        print("DATE:", date)
         if not is_valid_date(date) or not is_valid_source(source):
             return None
         
         if source == constants.TWITTER:
             query = {"date": date, "region": region.lower()}
-            print("QUERY:", query)
             result = self.twitter_collection.find(query)
-            print("Result:", result)
         elif source == constants.GOOGLE:
             query = {"date": date}
             result = self.google_collection.find(query)

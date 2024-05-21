@@ -12,9 +12,7 @@ class TendenciesController:
 
     @staticmethod
     def get_twitter_tendencies(request: Request, date: str, region: str): #TODO validar la region?
-        print("aaaaaa")
         if (tendencies := tendencies_repository.get_from(date, TWITTER, region)) is not None:
-            print("tendencies return:", tendencies)
             return tendencies
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=f"Date {date} or source {TWITTER} not valid"
