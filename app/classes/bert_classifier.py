@@ -16,7 +16,7 @@ class BertClassifier:
         self.model = model
 
     def predict(self,text,threshold = 0.5):
-        inputs = self.tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
+        inputs = self.tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=1024)
         inputs.to(self.device)
         with torch.no_grad():
             outputs = self.model(**inputs)

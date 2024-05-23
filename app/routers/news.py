@@ -8,9 +8,9 @@ from newspaper import Article
 
 from app.controllers.news_controller import NewsController
 from app.models.news import News
+from app.models.url import Url
 
 router = APIRouter()
-
 
 @router.post(
     "/news/",
@@ -53,18 +53,14 @@ async def delete_news(request: Request, id: str, response: Response):
 @router.post(
     "/news/fetch-data", tags=["news"], response_description="Post an article by url"
 )
-async def fetch_data(request: Request, response: Response):
-    body = await obtain_body(request)
-    url = body.get("url")
-
+async def fetch_data(request: Url, response: Response):
+    url = request.url
     article_content = await fetch_article_content(url)
 
     if article_content:
-        # Analizar el contenido HTML para obtener solo el texto
         soup = BeautifulSoup(article_content, "html.parser")
         text_content = soup.get_text()
 
-        # Devolver el contenido del artículo
         return text_content
     else:
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -75,11 +71,10 @@ async def fetch_data(request: Request, response: Response):
 
 
 async def obtain_body(request: Request):
-    try:
-        # Extraer el contenido del artículo
+    try:    
         body_bytes = await request.body()
         body_bytes_decoded = body_bytes.decode("utf-8")
-        # Parse the JSON data
+        
         return json.loads(body_bytes_decoded)
     except Exception as e:
         print("Error al obtener el contenido del artículo:", e)
@@ -91,14 +86,11 @@ async def obtain_body(request: Request):
 
 async def fetch_article_content(url):
     try:
-        # Crear un objeto Article
         article = Article(url)
 
-        # Descargar y analizar el artículo
         article.download()
         article.parse()
 
-        # Obtener el contenido del artículo
         content = article.text
 
         return content
